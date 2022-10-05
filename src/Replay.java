@@ -6,7 +6,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -63,7 +66,18 @@ public class Replay {
 
     public static void main(String[] args) {
         MarioGame game = new MarioGame();
-        MarioResult result = game.playGame(getLevel("./levels/original/lvl-1.txt"), 200, 0);
+//        MarioResult result = game.playGame(getLevel("./levels/original/lvl-5.txt"), 200, 0);
+        MarioResult result = game.runGame(new agents.robinBaumgarten.Agent(), getLevel("./levels/original/lvl-1.txt"), 20, 0, true);
+        try {
+            FileOutputStream f = new FileOutputStream("data/gameEvents.dat");
+            BufferedOutputStream b = new BufferedOutputStream(f);
+            ObjectOutputStream out = new ObjectOutputStream(b);
+            out.writeObject(result.getGameEvents());
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         new Replay(result.getSnapshots());
     }
 }
