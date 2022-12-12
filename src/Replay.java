@@ -80,7 +80,7 @@ public class Replay {
         try {
             for (int i = 0; i < video.size(); i++) {
                 BufferedImage image = video.get(i);
-                ImageIO.write(image, "png", new File(String.format("data/%d.png", i)));
+                ImageIO.write(image, "png", new File(String.format("data/img/%d.png", i)));
             }
         } catch (IOException e) {
             e.printStackTrace();
