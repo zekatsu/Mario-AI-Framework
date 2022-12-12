@@ -88,6 +88,10 @@ public class MarioGame {
         }
     }
 
+    public void dispose() {
+        this.window.dispose();
+    }
+
     /**
      * Play a certain mario level
      *
@@ -211,6 +215,7 @@ public class MarioGame {
             this.window.setContentPane(this.render);
             this.window.pack();
             this.window.setResizable(false);
+            this.window.setLocation(960 - 256, 540 - 240);
             this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             this.render.init();
             this.window.setVisible(true);
