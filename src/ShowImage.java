@@ -54,4 +54,10 @@ public class ShowImage implements ChangeListener {
             e.printStackTrace();
         }
     }
+
+    public static void main(String[] args) {
+        ShowImage showImage = new ShowImage();
+        showImage.slider.setValue(0);
+        showImage.frame.setVisible(true);
+    }
 }
