@@ -1,3 +1,5 @@
+package scripts;
+
 import engine.core.MarioEvent;
 
 import java.io.*;
@@ -38,8 +40,7 @@ public class ConcatData {
                 FileInputStream f = new FileInputStream(dataPathArray[i].resolve("gameEvents.dat").toFile());
                 ObjectInputStream in = new ObjectInputStream(f);
                 ArrayList<MarioEvent> i_gameEvents = (ArrayList<MarioEvent>) in.readObject();
-                for (int j = 0; j < i_gameEvents.size(); j++) {
-                    MarioEvent event = i_gameEvents.get(j);
+                for (MarioEvent event: i_gameEvents) {
                     event.setTime(event.getTime() + imgNumCumArray[i]);
                     gameEvents.add(event);
                 }

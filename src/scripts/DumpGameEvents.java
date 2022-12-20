@@ -1,3 +1,5 @@
+package scripts;
+
 import engine.core.MarioEvent;
 
 import java.io.FileInputStream;
