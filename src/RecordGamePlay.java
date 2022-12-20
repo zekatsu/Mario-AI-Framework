@@ -22,22 +22,22 @@ public class RecordGamePlay {
         MarioGame game = new MarioGame();
         while (true) {
             Scanner scanner = new Scanner(System.in);
-            String level_name = scanner.next();
-            String level = getLevel("./levels/original/lvl-" + level_name + ".txt");
-            while (true) {
+            String levelName = scanner.next();
+            String level = getLevel("./levels/original/lvl-" + levelName + ".txt");
+            for (int i = 0; i < 10; i++) {
                 MarioResult result = game.runGame(new agents.human.Agent(), level, 300, 0, true, 24);
-                saveData(result);
+                saveData(result, levelName);
                 game.dispose();
                 if (result.getGameStatus() == GameStatus.WIN) break;
             }
         }
     }
 
-    private void saveData(MarioResult result) {
+    private void saveData(MarioResult result, String levelName) {
         try {
             SimpleDateFormat fileNameFormat = new SimpleDateFormat("MM-dd HH:mm:ss");
             String dateString = fileNameFormat.format(Calendar.getInstance().getTime());
-            String dirString = "data/" + dateString;
+            String dirString = "data/" + dateString + " lvl-" + levelName;
             Files.createDirectory(Paths.get(dirString));
             Files.createDirectory(Paths.get(dirString + "/img"));
 
