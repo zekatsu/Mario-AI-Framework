@@ -72,6 +72,10 @@ public class MarioEvent implements Serializable {
         return this.time;
     }
 
+    public void setTime(int new_time) {
+        this.time = new_time;
+    }
+
     @Override
     public boolean equals(Object obj) {
         MarioEvent otherEvent = (MarioEvent) obj;
