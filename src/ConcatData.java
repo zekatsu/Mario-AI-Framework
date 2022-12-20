@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class concatData {
+public class ConcatData {
     public static void main(String[] args) {
         try {
             Path[] dataPathArray = Files.list(Paths.get("data")).filter(path -> {
