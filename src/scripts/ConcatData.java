@@ -35,6 +35,8 @@ public class ConcatData {
                     imgNumCumArray[i] = imgNumCumArray[i - 1] + imgNumArray[i - 1];
                 }
             }
+
+            // create combined game events
             ArrayList<MarioEvent> gameEvents = new ArrayList<>();
             for (int i = 0; i < len; i++) {
                 FileInputStream f = new FileInputStream(dataPathArray[i].resolve("gameEvents.dat").toFile());
@@ -45,7 +47,6 @@ public class ConcatData {
                     gameEvents.add(event);
                 }
             }
-            // save game events
             FileOutputStream f = new FileOutputStream("data/gameEvents.dat");
             BufferedOutputStream b = new BufferedOutputStream(f);
             ObjectOutputStream out = new ObjectOutputStream(b);
