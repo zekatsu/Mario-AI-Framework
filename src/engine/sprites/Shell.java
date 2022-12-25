@@ -137,8 +137,7 @@ public class Shell extends MarioSprite {
                     }
                 } else {
                     if (facing != 0) {
-                        world.addEvent(EventType.HURT, this.type.getValue());
-                        world.mario.getHurt();
+                        world.mario.getHurt(this.type.getValue());
                     } else {
                         world.addEvent(EventType.KICK, this.type.getValue());
                         world.mario.kick(this);

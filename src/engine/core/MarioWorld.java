@@ -291,6 +291,8 @@ public class MarioWorld {
     }
 
     public void update(boolean[] actions) {
+        this.lastFrameEvents.clear();
+
         if (this.gameStatus != GameStatus.RUNNING) {
             return;
         }
@@ -325,8 +327,6 @@ public class MarioWorld {
         if (this.cameraY < 0) {
             this.cameraY = 0;
         }
-
-        this.lastFrameEvents.clear();
 
         this.fireballsOnScreen = 0;
         for (MarioSprite sprite : sprites) {

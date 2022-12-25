@@ -74,8 +74,7 @@ public class BulletBill extends MarioSprite {
                     }
                     this.world.removeSprite(this);
                 } else {
-                    this.world.addEvent(EventType.HURT, this.type.getValue());
-                    world.mario.getHurt();
+                    world.mario.getHurt(this.type.getValue());
                 }
             }
         }
