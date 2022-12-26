@@ -14,6 +14,8 @@ public class DumpGameEvents {
             ObjectInputStream in = new ObjectInputStream(f);
             ArrayList<MarioEvent> gameEvents = (ArrayList<MarioEvent>) in.readObject();
             for (MarioEvent event: gameEvents) {
+                System.out.print(event.getTime());
+                System.out.print(", ");
                 System.out.print(event.getEventType());
                 System.out.print(", ");
                 System.out.println(event.getEventParam());
