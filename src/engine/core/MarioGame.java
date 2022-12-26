@@ -275,7 +275,9 @@ public class MarioGame {
             //render world
             if (visual) {
                 this.render.renderWorld(this.world, renderTarget, backBuffer, currentBuffer);
-                snapshots.add(renderTarget.getSnapshot());
+                while (snapshots.size() - 1 < this.world.currentTick) {
+                    snapshots.add(renderTarget.getSnapshot());
+                }
             }
             //check if delay needed
             if (this.getDelay(fps) > 0) {
