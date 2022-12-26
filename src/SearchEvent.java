@@ -12,13 +12,18 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
-public class SearchEvent {
+public class SearchEvent implements ActionListener {
     private final JTable table;
     private DefaultTableModel tableModel;
     private final JComboBox<EventType> eventTypeDropdown;
     private final JComboBox<SpriteType> spriteTypeDropdown;
-    private ArrayList<MarioEvent> gameEvents;
+
     private final ShowImage showImage;
+
+    private ArrayList<MarioEvent> gameEvents;
+
+    private ArrayList<MarioEvent> searchResult;
+    private int searchResultIndex;
 
     SearchEvent() {
         // read gameEvents.dat
@@ -41,21 +46,36 @@ public class SearchEvent {
         this.table.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(this.eventTypeDropdown));
         this.table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(this.spriteTypeDropdown));
 
-        JButton addButton = new JButton("add");
-        JButton deleteButton = new JButton("delete");
-        JButton searchButton = new JButton("search");
-        addButton.addActionListener(new AddActionListener());
-        deleteButton.addActionListener(new DeleteActionListener());
-        searchButton.addActionListener(new SearchActionListener());
-
         JScrollPane scrollPane = new JScrollPane(this.table);
         scrollPane.setPreferredSize(new Dimension(250, 90));
 
+        JButton addButton = new JButton("add");
+        JButton deleteButton = new JButton("delete");
+        JButton searchButton = new JButton("search");
+        addButton.addActionListener(this);
+        deleteButton.addActionListener(this);
+        searchButton.addActionListener(this);
+
+        JPanel editButtonPanel = new JPanel();
+        editButtonPanel.setLayout(new FlowLayout());
+        editButtonPanel.add(addButton);
+        editButtonPanel.add(deleteButton);
+        editButtonPanel.add(searchButton);
+
+        JButton previousButton = new JButton("previous");
+        JButton nextButton = new JButton("next");
+        previousButton.addActionListener(this);
+        nextButton.addActionListener(this);
+
+        JPanel navigateButtonPanel = new JPanel();
+        navigateButtonPanel.setLayout(new FlowLayout());
+        navigateButtonPanel.add(previousButton);
+        navigateButtonPanel.add(nextButton);
+
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout());
-        buttonPanel.add(addButton);
-        buttonPanel.add(deleteButton);
-        buttonPanel.add(searchButton);
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
+        buttonPanel.add(editButtonPanel);
+        buttonPanel.add(navigateButtonPanel);
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
@@ -72,43 +92,51 @@ public class SearchEvent {
         this.showImage = new ShowImage();
     }
 
-    private class AddActionListener implements ActionListener {
-        public void actionPerformed(ActionEvent actionEvent) {
+    public void actionPerformed(ActionEvent actionEvent) {
+        String cmd = actionEvent.getActionCommand();
+        if (cmd.equals("add")) {
             Object[] defaultData = {EventType.BUMP, SpriteType.NONE};
-            tableModel.addRow(defaultData);
+            this.tableModel.addRow(defaultData);
         }
-    }
-
-    private class DeleteActionListener implements ActionListener {
-        public void actionPerformed(ActionEvent actionEvent) {
+        if (cmd.equals("delete")) {
             if (table.getSelectedRow() >= 0) {
                 tableModel.removeRow(table.getSelectedRow());
             }
         }
+        if (cmd.equals("search")) {
+            this.searchResult = searchEvent();
+            if (!searchResult.isEmpty()) {
+                this.searchResultIndex = 0;
+                showImage.set(searchResult.get(this.searchResultIndex).getTime());
+                System.out.println(searchResult.get(this.searchResultIndex).getTime());
+            }
+        }
+        if (cmd.equals("previous")) {
+            if (this.searchResultIndex > 0) {
+                this.searchResultIndex--;
+                showImage.set(searchResult.get(this.searchResultIndex).getTime());
+                System.out.println(searchResult.get(this.searchResultIndex).getTime());
+            }
+        }
+        if (cmd.equals("next")) {
+            if (this.searchResultIndex < this.searchResult.size() - 1) {
+                this.searchResultIndex++;
+                showImage.set(searchResult.get(this.searchResultIndex).getTime());
+                System.out.println(searchResult.get(this.searchResultIndex).getTime());
+            }
+        }
     }
 
-    private class SearchActionListener implements ActionListener {
-        public void actionPerformed(ActionEvent actionEvent) {
-            ArrayList<MarioEvent> searchResult = searchEvent();
-            for (MarioEvent event : searchResult) {
-                System.out.println(event.getTime());
-            }
-            if (!searchResult.isEmpty()) {
-                showImage.set(searchResult.get(0).getTime());
+    public ArrayList<MarioEvent> searchEvent() {
+        EventType targetEventType = (EventType) tableModel.getValueAt(0, 0);
+        SpriteType targetSpriteType = (SpriteType) tableModel.getValueAt(0, 1);
+        ArrayList<MarioEvent> ret = new ArrayList<>();
+        for (MarioEvent event : gameEvents) {
+            if (event.getEventType() == targetEventType.getValue() && event.getEventParam() == targetSpriteType.getValue()) {
+                ret.add(event);
             }
         }
-
-        public ArrayList<MarioEvent> searchEvent() {
-            EventType targetEventType = (EventType) tableModel.getValueAt(0, 0);
-            SpriteType targetSpriteType = (SpriteType) tableModel.getValueAt(0, 1);
-            ArrayList<MarioEvent> ret = new ArrayList<>();
-            for (MarioEvent event : gameEvents) {
-                if (event.getEventType() == targetEventType.getValue() && event.getEventParam() == targetSpriteType.getValue()) {
-                    ret.add(event);
-                }
-            }
-            return ret;
-        }
+        return ret;
     }
 
     public static void main(String[] args) {
