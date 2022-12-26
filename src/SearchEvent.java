@@ -18,6 +18,8 @@ public class SearchEvent implements ActionListener {
     private final JComboBox<EventType> eventTypeDropdown;
     private final JComboBox<SpriteType> spriteTypeDropdown;
 
+    private final JLabel messageLabel;
+
     private final ShowImage showImage;
 
     private ArrayList<MarioEvent> gameEvents;
@@ -72,10 +74,13 @@ public class SearchEvent implements ActionListener {
         navigateButtonPanel.add(previousButton);
         navigateButtonPanel.add(nextButton);
 
+        this.messageLabel = new JLabel("test");
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
         buttonPanel.add(editButtonPanel);
         buttonPanel.add(navigateButtonPanel);
+        buttonPanel.add(messageLabel);
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
@@ -108,21 +113,23 @@ public class SearchEvent implements ActionListener {
             if (!searchResult.isEmpty()) {
                 this.searchResultIndex = 0;
                 showImage.set(searchResult.get(this.searchResultIndex).getTime());
-                System.out.println(searchResult.get(this.searchResultIndex).getTime());
+                this.messageLabel.setText(String.format("%d / %d", this.searchResultIndex + 1, this.searchResult.size()));
+            } else {
+                this.messageLabel.setText("No results found");
             }
         }
         if (cmd.equals("previous")) {
             if (this.searchResultIndex > 0) {
                 this.searchResultIndex--;
                 showImage.set(searchResult.get(this.searchResultIndex).getTime());
-                System.out.println(searchResult.get(this.searchResultIndex).getTime());
+                this.messageLabel.setText(String.format("%d / %d", this.searchResultIndex + 1, this.searchResult.size()));
             }
         }
         if (cmd.equals("next")) {
             if (this.searchResultIndex < this.searchResult.size() - 1) {
                 this.searchResultIndex++;
                 showImage.set(searchResult.get(this.searchResultIndex).getTime());
-                System.out.println(searchResult.get(this.searchResultIndex).getTime());
+                this.messageLabel.setText(String.format("%d / %d", this.searchResultIndex + 1, this.searchResult.size()));
             }
         }
     }
