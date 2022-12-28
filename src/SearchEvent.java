@@ -1,6 +1,7 @@
 import engine.core.MarioEvent;
 import engine.helper.EventType;
 import engine.helper.SpriteType;
+import engine.sprites.Mario;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -24,7 +25,7 @@ public class SearchEvent implements ActionListener {
 
     private ArrayList<MarioEvent> gameEvents;
 
-    private ArrayList<MarioEvent> searchResult;
+    private ArrayList<ArrayList<MarioEvent>> searchResult;
     private int searchResultIndex;
 
     SearchEvent() {
@@ -110,10 +111,12 @@ public class SearchEvent implements ActionListener {
         }
         if (cmd.equals("search")) {
             this.searchResult = searchEvent();
+            for (ArrayList<MarioEvent> events: this.searchResult) {
+                System.out.println(events.get(0).getTime());
+            }
             if (!searchResult.isEmpty()) {
                 this.searchResultIndex = 0;
-                showImage.set(searchResult.get(this.searchResultIndex).getTime());
-                this.messageLabel.setText(String.format("%d / %d", this.searchResultIndex + 1, this.searchResult.size()));
+                this.updateSearchResult();
             } else {
                 this.messageLabel.setText("No results found");
             }
@@ -121,29 +124,72 @@ public class SearchEvent implements ActionListener {
         if (cmd.equals("previous")) {
             if (this.searchResultIndex > 0) {
                 this.searchResultIndex--;
-                showImage.set(searchResult.get(this.searchResultIndex).getTime());
-                this.messageLabel.setText(String.format("%d / %d", this.searchResultIndex + 1, this.searchResult.size()));
+                this.updateSearchResult();
             }
         }
         if (cmd.equals("next")) {
             if (this.searchResultIndex < this.searchResult.size() - 1) {
                 this.searchResultIndex++;
-                showImage.set(searchResult.get(this.searchResultIndex).getTime());
-                this.messageLabel.setText(String.format("%d / %d", this.searchResultIndex + 1, this.searchResult.size()));
+                this.updateSearchResult();
             }
         }
     }
 
-    public ArrayList<MarioEvent> searchEvent() {
-        EventType targetEventType = (EventType) tableModel.getValueAt(0, 0);
-        SpriteType targetSpriteType = (SpriteType) tableModel.getValueAt(0, 1);
-        ArrayList<MarioEvent> ret = new ArrayList<>();
-        for (MarioEvent event : gameEvents) {
-            if (event.getEventType() == targetEventType.getValue() && event.getEventParam() == targetSpriteType.getValue()) {
-                ret.add(event);
+    private void updateSearchResult() {
+        showImage.set(searchResult.get(this.searchResultIndex).get(0).getTime());
+        this.messageLabel.setText(String.format("%d / %d", this.searchResultIndex + 1, this.searchResult.size()));
+    }
+
+    private ArrayList<ArrayList<MarioEvent>> searchEvent() {
+        int rowCount = tableModel.getRowCount();
+        ArrayList<ArrayList<MarioEvent>> ret = new ArrayList<>();
+        if (rowCount == 0) {
+            return ret;
+        }
+        for (int p = 0; p < gameEvents.size(); p++) {
+            ArrayList<MarioEvent> result = searchEvent(0, p);
+            if (!result.isEmpty()) {
+                int start = result.get(0).getTime();
+                int end = result.get(result.size() - 1).getTime();
+                if (end - start <= 5 * 24) {
+                    // check if the last element is unique
+                    if (!ret.isEmpty()) {
+                        ArrayList<MarioEvent> previousResult = ret.get(ret.size() - 1);
+                        if (end == previousResult.get(previousResult.size() - 1).getTime()) {
+                            ret.remove(ret.size() - 1);
+                        }
+                    }
+                    ret.add(result);
+                }
             }
         }
         return ret;
+    }
+
+    private ArrayList<MarioEvent> searchEvent(int i, int pos) {
+        int rowCount = tableModel.getRowCount();
+        ArrayList<MarioEvent> ret = new ArrayList<>();
+        EventType targetEventType = (EventType) tableModel.getValueAt(i, 0);
+        SpriteType targetSpriteType = (SpriteType) tableModel.getValueAt(i, 1);
+        MarioEvent event = gameEvents.get(pos);
+        if (event.getEventType() == targetEventType.getValue() && event.getEventParam() == targetSpriteType.getValue()) {
+            if (i == rowCount - 1) {
+                ret.add(event);
+                return ret;
+            } else {
+                for (int p = pos + 1; p < gameEvents.size(); p++) {
+                    ArrayList<MarioEvent> result = searchEvent(i + 1, p);
+                    if (!result.isEmpty()) {
+                        ret.add(event);
+                        ret.addAll(result);
+                        return ret;
+                    }
+                }
+                return ret;
+            }
+        } else {
+            return ret;
+        }
     }
 
     public static void main(String[] args) {
