@@ -1,9 +1,9 @@
+import engine.core.MarioGame;
+import engine.core.MarioResult;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
-import engine.core.MarioGame;
-import engine.core.MarioResult;
 
 public class PlayLevel {
     public static void printResults(MarioResult result) {
