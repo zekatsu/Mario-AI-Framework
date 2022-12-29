@@ -1,7 +1,6 @@
 import engine.core.MarioEvent;
 import engine.helper.EventType;
 import engine.helper.SpriteType;
-import engine.sprites.Mario;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -13,7 +12,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
-public class SearchEvent implements ActionListener {
+public class GuiSearch implements ActionListener {
     private final JTable table;
     private DefaultTableModel tableModel;
     private final JComboBox<EventType> eventTypeDropdown;
@@ -25,15 +24,17 @@ public class SearchEvent implements ActionListener {
 
     private ArrayList<MarioEvent> gameEvents;
 
+    private Search search;
     private ArrayList<ArrayList<MarioEvent>> searchResult;
     private int searchResultIndex;
 
-    SearchEvent() {
+    GuiSearch() {
         // read gameEvents.dat
         try {
             FileInputStream f = new FileInputStream("data/gameEvents.dat");
             ObjectInputStream in = new ObjectInputStream(f);
             this.gameEvents = (ArrayList<MarioEvent>) in.readObject();
+            this.search = new Search(this.gameEvents);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -110,10 +111,10 @@ public class SearchEvent implements ActionListener {
             }
         }
         if (cmd.equals("search")) {
-            this.searchResult = searchEvent();
-            for (ArrayList<MarioEvent> events: this.searchResult) {
-                System.out.println(events.get(0).getTime());
-            }
+            this.searchResult = search.searchEvent(this.tableModel);
+//            for (ArrayList<MarioEvent> events: this.searchResult) {
+//                System.out.println(events.get(0).getTime());
+//            }
             if (!searchResult.isEmpty()) {
                 this.searchResultIndex = 0;
                 this.updateSearchResult();
@@ -140,59 +141,7 @@ public class SearchEvent implements ActionListener {
         this.messageLabel.setText(String.format("%d / %d", this.searchResultIndex + 1, this.searchResult.size()));
     }
 
-    private ArrayList<ArrayList<MarioEvent>> searchEvent() {
-        int rowCount = tableModel.getRowCount();
-        ArrayList<ArrayList<MarioEvent>> ret = new ArrayList<>();
-        if (rowCount == 0) {
-            return ret;
-        }
-        for (int p = 0; p < gameEvents.size(); p++) {
-            ArrayList<MarioEvent> result = searchEvent(0, p);
-            if (!result.isEmpty()) {
-                int start = result.get(0).getTime();
-                int end = result.get(result.size() - 1).getTime();
-                if (end - start <= 5 * 24) {
-                    // check if the last element is unique
-                    if (!ret.isEmpty()) {
-                        ArrayList<MarioEvent> previousResult = ret.get(ret.size() - 1);
-                        if (end == previousResult.get(previousResult.size() - 1).getTime()) {
-                            ret.remove(ret.size() - 1);
-                        }
-                    }
-                    ret.add(result);
-                }
-            }
-        }
-        return ret;
-    }
-
-    private ArrayList<MarioEvent> searchEvent(int i, int pos) {
-        int rowCount = tableModel.getRowCount();
-        ArrayList<MarioEvent> ret = new ArrayList<>();
-        EventType targetEventType = (EventType) tableModel.getValueAt(i, 0);
-        SpriteType targetSpriteType = (SpriteType) tableModel.getValueAt(i, 1);
-        MarioEvent event = gameEvents.get(pos);
-        if (event.getEventType() == targetEventType.getValue() && event.getEventParam() == targetSpriteType.getValue()) {
-            if (i == rowCount - 1) {
-                ret.add(event);
-                return ret;
-            } else {
-                for (int p = pos + 1; p < gameEvents.size(); p++) {
-                    ArrayList<MarioEvent> result = searchEvent(i + 1, p);
-                    if (!result.isEmpty()) {
-                        ret.add(event);
-                        ret.addAll(result);
-                        return ret;
-                    }
-                }
-                return ret;
-            }
-        } else {
-            return ret;
-        }
-    }
-
     public static void main(String[] args) {
-        new SearchEvent();
+        new GuiSearch();
     }
 }
