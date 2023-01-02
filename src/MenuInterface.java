@@ -1,6 +1,5 @@
 import engine.core.MarioEvent;
 import engine.helper.EventType;
-import engine.helper.SpriteType;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -16,7 +15,7 @@ public class MenuInterface implements ActionListener {
     private final JTable table;
     private DefaultTableModel tableModel;
     private final JComboBox<EventType> eventTypeDropdown;
-    private final JComboBox<SpriteType> spriteTypeDropdown;
+    private final JComboBox<EventParam> eventParamDropdown;
 
     private final JLabel messageLabel;
 
@@ -41,14 +40,14 @@ public class MenuInterface implements ActionListener {
 
         // GUI initialization
         this.eventTypeDropdown = new JComboBox<>(EventType.values());
-        this.spriteTypeDropdown = new JComboBox<>(SpriteType.values());
+        this.eventParamDropdown = new JComboBox<>(EventParam.values());
 
         String[] columnsNames = {"eventType", "param", "select"};
         this.tableModel = new DefaultTableModel(columnsNames, 0);
 
         this.table = new JTable(this.tableModel);
         this.table.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(this.eventTypeDropdown));
-        this.table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(this.spriteTypeDropdown));
+        this.table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(this.eventParamDropdown));
 
         JScrollPane scrollPane = new JScrollPane(this.table);
         scrollPane.setPreferredSize(new Dimension(250, 90));
@@ -102,7 +101,7 @@ public class MenuInterface implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         String cmd = actionEvent.getActionCommand();
         if (cmd.equals("add")) {
-            Object[] defaultData = {EventType.BUMP, SpriteType.NONE};
+            Object[] defaultData = {EventType.BUMP, EventParam.NONE};
             this.tableModel.addRow(defaultData);
         }
         if (cmd.equals("delete")) {
