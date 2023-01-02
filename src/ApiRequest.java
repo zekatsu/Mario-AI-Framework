@@ -17,19 +17,16 @@ class ApiData {
     public double presence_penalty = 0.0;
     public String stop = "###";
     private String prePrompt = """
+This is game event generator for "Super Mario Bros."
+This creates a list of events that is likely to happen in chronological order, based on given description.
+Game events consists of Type and Parameter.
+Type is one of [BUMP, STOMP_KILL, FIRE_KILL, SHELL_KILL, FALL_KILL, JUMP, LAND, COLLECT, HURT, KICK, LOSE, WIN]
+Parameter is one of [NONE, GOOMBA, RED_KOOPA, RED_KOOPA_WINGED, GREEN_KOOPA, GREEN_KOOPA_WINGED, SPIKY, BULLET_BILL, ENEMY_FLOWER, MUSHROOM, FIRE_FLOWER, SHELL, COIN, BRICK, QUESTION_BLOCK]
 ###
-This creates a list of events that is likely to happen in Super Mario Bros. in chronological order, based on a description.
-Game events consists of EventType and Object
-EventType is one of BUMP, STOMP_KILL, FIRE_KILL, SHELL_KILL, FALL_KILL, JUMP, LAND, COLLECT, HURT, KICK, LOSE, WIN
-Object is one of NONE, GOOMBA, RED_KOOPA, RED_KOOPA_WINGED, GREEN_KOOPA, GREEN_KOOPA_WINGED, BULLET_BILL, ENEMY_FLOWER, MUSHROOM, FIRE_FLOWER, SHELL, LIFE_MUSHROOM, BLOCK, QUESTION_BLOCK, COIN
-description: Mario gets mushroom and jumps.
-1. ITEM_GET, MUSHROOM
-2. JUMP, NONE
-###
-description: Mario kills two goombas in a row, but hurt by third goomba.
-1. STOMP_KILL, GOOMBA
-2. STOMP_KILL, GOOMBA
-3. HURT, GOOMBA
+description: Mario jumps and get two coins.
+1. JUMP, NONE
+2. COLLECT, COIN
+3. COLLECT, COIN
 ###
 description:""";
 
