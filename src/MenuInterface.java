@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
-public class GuiSearch implements ActionListener {
+public class MenuInterface implements ActionListener {
     private final JTable table;
     private DefaultTableModel tableModel;
     private final JComboBox<EventType> eventTypeDropdown;
@@ -28,7 +28,7 @@ public class GuiSearch implements ActionListener {
     private ArrayList<ArrayList<MarioEvent>> searchResult;
     private int searchResultIndex;
 
-    GuiSearch() {
+    MenuInterface() {
         // read gameEvents.dat
         try {
             FileInputStream f = new FileInputStream("data/gameEvents.dat");
@@ -142,6 +142,6 @@ public class GuiSearch implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new GuiSearch();
+        new MenuInterface();
     }
 }
