@@ -1,12 +1,13 @@
 import engine.core.MarioGame;
 import engine.core.MarioResult;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -64,6 +65,26 @@ public class Replay {
     public static void main(String[] args) {
         MarioGame game = new MarioGame();
         MarioResult result = game.playGame(getLevel("./levels/original/lvl-1.txt"), 200, 0);
+//        MarioResult result = game.runGame(new agents.robinBaumgarten.Agent(), getLevel("./levels/original/lvl-1.txt"), 20, 0, true);
+        try {
+            FileOutputStream f = new FileOutputStream("data/gameEvents.dat");
+            BufferedOutputStream b = new BufferedOutputStream(f);
+            ObjectOutputStream out = new ObjectOutputStream(b);
+            out.writeObject(result.getGameEvents());
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<BufferedImage> video = result.getSnapshots();
+        try {
+            for (int i = 0; i < video.size(); i++) {
+                BufferedImage image = video.get(i);
+                ImageIO.write(image, "png", new File(String.format("data/img/%d.png", i)));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         new Replay(result.getSnapshots());
     }
 }

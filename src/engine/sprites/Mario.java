@@ -390,10 +390,11 @@ public class Mario extends MarioSprite {
         invulnerableTime = 1;
     }
 
-    public void getHurt() {
+    public void getHurt(int spriteTypeValue) {
         if (invulnerableTime > 0 || !this.alive)
             return;
 
+        this.world.addEvent(EventType.HURT, spriteTypeValue);
         if (isLarge) {
             world.pauseTimer = 3 * POWERUP_TIME;
             this.oldLarge = this.isLarge;

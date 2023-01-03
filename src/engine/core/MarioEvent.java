@@ -2,7 +2,9 @@ package engine.core;
 
 import engine.helper.EventType;
 
-public class MarioEvent {
+import java.io.Serializable;
+
+public class MarioEvent implements Serializable {
     private EventType eventType;
     private int eventParam;
     private float marioX;
@@ -68,6 +70,10 @@ public class MarioEvent {
 
     public int getTime() {
         return this.time;
+    }
+
+    public void setTime(int new_time) {
+        this.time = new_time;
     }
 
     @Override

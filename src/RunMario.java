@@ -4,8 +4,9 @@ import engine.core.MarioResult;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Scanner;
 
-public class PlayLevel {
+public class RunMario {
     public static void printResults(MarioResult result) {
         System.out.println("****************************************************************");
         System.out.println("Game Status: " + result.getGameStatus().toString() +
@@ -34,7 +35,11 @@ public class PlayLevel {
 
     public static void main(String[] args) {
         MarioGame game = new MarioGame();
-        // printResults(game.playGame(getLevel("./levels/original/lvl-1.txt"), 200, 0));
-        printResults(game.runGame(new agents.robinBaumgarten.Agent(), getLevel("./levels/original/lvl-1.txt"), 20, 0, true));
+        while (true) {
+            Scanner scanner = new Scanner(System.in);
+            String level_name = scanner.next();
+            String level = getLevel("./levels/original/lvl-" + level_name + ".txt");
+            printResults(game.runGame(new agents.human.Agent(), level, 300, 0, true, 24));
+        }
     }
 }
