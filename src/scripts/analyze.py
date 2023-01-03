@@ -7,3 +7,7 @@ df.head()
 # %%
 df[2].unique()
 # %%
+df[1].unique()
+# %%
+print(df[df[2] == 22][0])
+# %%
