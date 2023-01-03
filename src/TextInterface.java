@@ -22,7 +22,8 @@ public class TextInterface implements ActionListener {
     private int searchResultIndex;
 
     private JTextArea textArea;
-    private JTextArea message;
+    private JLabel messageLabel;
+    private JTextArea lmResponse;
 
     private final ShowImage showImage;
 
@@ -38,23 +39,38 @@ public class TextInterface implements ActionListener {
         }
 
         // GUI initialization
-        this.textArea = new JTextArea(4, 20);
+        this.textArea = new JTextArea(4, 15);
         textArea.setLineWrap(true);
         textArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
 
-        JButton submitButton = new JButton("submit");
-        submitButton.addActionListener(this);
-        submitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JButton searchButton = new JButton("search");
+        searchButton.addActionListener(this);
 
-        this.message = new JTextArea(4, 20);
-        this.message.setEditable(false);
-        this.message.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+        JButton previousButton = new JButton("previous");
+        previousButton.addActionListener(this);
+
+        JButton nextButton = new JButton("next");
+        nextButton.addActionListener(this);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout());
+        buttonPanel.add(searchButton);
+        buttonPanel.add(previousButton);
+        buttonPanel.add(nextButton);
+
+        this.messageLabel = new JLabel("please enter text and press search");
+        this.messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        this.lmResponse = new JTextArea(4, 15);
+        this.lmResponse.setEditable(false);
+        this.lmResponse.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
         panel.add(this.textArea);
-        panel.add(submitButton);
-        panel.add(this.message);
+        panel.add(buttonPanel);
+        panel.add(this.messageLabel);
+        panel.add(this.lmResponse);
 
         JFrame frame = new JFrame("TextSearch");
         frame.getContentPane().add(panel);
@@ -70,10 +86,10 @@ public class TextInterface implements ActionListener {
 
     public void actionPerformed(ActionEvent actionEvent) {
         String cmd = actionEvent.getActionCommand();
-        if (cmd.equals("submit")) {
+        if (cmd.equals("search")) {
             try {
                 ApiRequest request = new ApiRequest(this.textArea.getText());
-                this.message.setText(request.result);
+                this.lmResponse.setText(request.result);
                 this.parseText(request.result);
                 this.searchResult = this.search.searchEvent(this.eventTypes, this.eventParams);
                 if (!searchResult.isEmpty()) {
@@ -113,7 +129,8 @@ public class TextInterface implements ActionListener {
     }
 
     private void updateSearchResult() {
-        showImage.set(searchResult.get(this.searchResultIndex).get(0).getTime());
+        this.showImage.set(searchResult.get(this.searchResultIndex).get(0).getTime());
+        this.messageLabel.setText(String.format("%d / %d", this.searchResultIndex + 1, this.searchResult.size()));
     }
 
     public static void main(String[] args) {
