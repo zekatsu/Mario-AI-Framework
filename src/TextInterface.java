@@ -27,7 +27,10 @@ public class TextInterface implements ActionListener {
 
     private final ShowImage showImage;
 
-    TextInterface() {
+    private Logger logger;
+
+    TextInterface(Logger logger) {
+        this.logger = logger;
         // read gameEvents.dat
         try {
             FileInputStream f = new FileInputStream("data/gameEvents.dat");
@@ -95,6 +98,8 @@ public class TextInterface implements ActionListener {
                 if (!searchResult.isEmpty()) {
                     this.searchResultIndex = 0;
                     this.updateSearchResult();
+                } else {
+                    this.messageLabel.setText("No results found");
                 }
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
@@ -134,6 +139,6 @@ public class TextInterface implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new TextInterface();
+        new TextInterface(new Logger());
     }
 }

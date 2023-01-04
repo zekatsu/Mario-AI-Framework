@@ -27,7 +27,10 @@ public class MenuInterface implements ActionListener {
     private ArrayList<ArrayList<MarioEvent>> searchResult;
     private int searchResultIndex;
 
-    MenuInterface() {
+    private Logger logger;
+
+    MenuInterface(Logger logger) {
+        this.logger = logger;
         // read gameEvents.dat
         try {
             FileInputStream f = new FileInputStream("data/gameEvents.dat");
@@ -141,6 +144,6 @@ public class MenuInterface implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new MenuInterface();
+        new MenuInterface(new Logger());
     }
 }
