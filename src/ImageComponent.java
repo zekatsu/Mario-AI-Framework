@@ -17,13 +17,13 @@ public class ImageComponent extends JComponent {
 
     public void setImage(final BufferedImage image) {
         this.image = image;
-        repaint();
+        paintImmediately(0, 0, 256 * this.scale, 240 * this.scale);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (image != null)
-            g.drawImage(image, 0, 0, 256 * this.scale, 240 * this.scale, this);
+        if (this.image != null)
+            g.drawImage(this.image, 0, 0, 256 * this.scale, 240 * this.scale, this);
     }
 }
