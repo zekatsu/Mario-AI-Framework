@@ -19,7 +19,7 @@ public class MenuInterface implements ActionListener {
 
     private final JLabel messageLabel;
 
-    private final ShowImage showImage;
+    private final ShowResult showResult;
 
     private ArrayList<MarioEvent> gameEvents;
 
@@ -68,22 +68,12 @@ public class MenuInterface implements ActionListener {
         editButtonPanel.add(deleteButton);
         editButtonPanel.add(searchButton);
 
-        JButton previousButton = new JButton("previous");
-        JButton nextButton = new JButton("next");
-        previousButton.addActionListener(this);
-        nextButton.addActionListener(this);
-
-        JPanel navigateButtonPanel = new JPanel();
-        navigateButtonPanel.setLayout(new FlowLayout());
-        navigateButtonPanel.add(previousButton);
-        navigateButtonPanel.add(nextButton);
-
-        this.messageLabel = new JLabel("test");
+        this.messageLabel = new JLabel("add event and press search");
+        this.messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
         buttonPanel.add(editButtonPanel);
-        buttonPanel.add(navigateButtonPanel);
         buttonPanel.add(messageLabel);
 
         JPanel panel = new JPanel();
@@ -96,9 +86,10 @@ public class MenuInterface implements ActionListener {
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+        frame.setLocation(800, 200);
 
         // create showImage window
-        this.showImage = new ShowImage();
+        this.showResult = new ShowResult(this.logger);
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
@@ -113,34 +104,20 @@ public class MenuInterface implements ActionListener {
             }
         }
         if (cmd.equals("search")) {
-            this.searchResult = search.searchEvent(this.tableModel);
-//            for (ArrayList<MarioEvent> events: this.searchResult) {
-//                System.out.println(events.get(0).getTime());
-//            }
-            if (!searchResult.isEmpty()) {
-                this.searchResultIndex = 0;
-                this.updateSearchResult();
+            if (this.tableModel.getRowCount() == 0) {
+                this.messageLabel.setText("add event and press search");
+                this.messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             } else {
-                this.messageLabel.setText("No results found");
+                this.searchResult = search.searchEvent(this.tableModel);
+                if (!searchResult.isEmpty()) {
+                    this.searchResultIndex = 0;
+                    this.showResult.show(this.searchResult);
+                } else {
+                    this.messageLabel.setText("No results found");
+                    this.messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                }
             }
         }
-        if (cmd.equals("previous")) {
-            if (this.searchResultIndex > 0) {
-                this.searchResultIndex--;
-                this.updateSearchResult();
-            }
-        }
-        if (cmd.equals("next")) {
-            if (this.searchResultIndex < this.searchResult.size() - 1) {
-                this.searchResultIndex++;
-                this.updateSearchResult();
-            }
-        }
-    }
-
-    private void updateSearchResult() {
-        showImage.set(searchResult.get(this.searchResultIndex).get(0).getTime());
-        this.messageLabel.setText(String.format("%d / %d", this.searchResultIndex + 1, this.searchResult.size()));
     }
 
     public static void main(String[] args) {

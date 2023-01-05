@@ -25,7 +25,7 @@ public class TextInterface implements ActionListener {
     private JLabel messageLabel;
     private JTextArea lmResponse;
 
-    private final ShowImage showImage;
+    private final ShowResult showResult;
 
     private Logger logger;
 
@@ -48,18 +48,7 @@ public class TextInterface implements ActionListener {
 
         JButton searchButton = new JButton("search");
         searchButton.addActionListener(this);
-
-        JButton previousButton = new JButton("previous");
-        previousButton.addActionListener(this);
-
-        JButton nextButton = new JButton("next");
-        nextButton.addActionListener(this);
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout());
-        buttonPanel.add(searchButton);
-        buttonPanel.add(previousButton);
-        buttonPanel.add(nextButton);
+        searchButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         this.messageLabel = new JLabel("please enter text and press search");
         this.messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -71,7 +60,7 @@ public class TextInterface implements ActionListener {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
         panel.add(this.textArea);
-        panel.add(buttonPanel);
+        panel.add(searchButton);
         panel.add(this.messageLabel);
         panel.add(this.lmResponse);
 
@@ -80,9 +69,10 @@ public class TextInterface implements ActionListener {
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+        frame.setLocation(800, 500);
 
         // create showImage window
-        this.showImage = new ShowImage();
+        this.showResult = new ShowResult(this.logger);
         this.eventTypes = new ArrayList<>();
         this.eventParams = new ArrayList<>();
     }
@@ -97,24 +87,12 @@ public class TextInterface implements ActionListener {
                 this.searchResult = this.search.searchEvent(this.eventTypes, this.eventParams);
                 if (!searchResult.isEmpty()) {
                     this.searchResultIndex = 0;
-                    this.updateSearchResult();
+                    this.showResult.show(this.searchResult);
                 } else {
                     this.messageLabel.setText("No results found");
                 }
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
-            }
-        }
-        if (cmd.equals("previous")) {
-            if (this.searchResultIndex > 0) {
-                this.searchResultIndex--;
-                this.updateSearchResult();
-            }
-        }
-        if (cmd.equals("next")) {
-            if (this.searchResultIndex < this.searchResult.size() - 1) {
-                this.searchResultIndex++;
-                this.updateSearchResult();
             }
         }
     }
@@ -131,11 +109,6 @@ public class TextInterface implements ActionListener {
             this.eventTypes.add(type);
             this.eventParams.add(param);
         }
-    }
-
-    private void updateSearchResult() {
-        this.showImage.set(searchResult.get(this.searchResultIndex).get(0).getTime());
-        this.messageLabel.setText(String.format("%d / %d", this.searchResultIndex + 1, this.searchResult.size()));
     }
 
     public static void main(String[] args) {
