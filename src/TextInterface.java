@@ -51,7 +51,7 @@ public class TextInterface implements ActionListener {
         panel.add(this.messageLabel);
         panel.add(this.lmResponse);
 
-        JFrame frame = new JFrame("TextSearch");
+        JFrame frame = new JFrame("Text Interface");
         frame.getContentPane().add(panel);
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

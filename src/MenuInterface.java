@@ -64,7 +64,7 @@ public class MenuInterface implements ActionListener {
         panel.add(scrollPane, BorderLayout.CENTER);
         panel.add(buttonPanel, BorderLayout.PAGE_END);
 
-        JFrame frame = new JFrame();
+        JFrame frame = new JFrame("Menu Interface");
         frame.getContentPane().add(panel);
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
