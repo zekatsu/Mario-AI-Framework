@@ -57,6 +57,7 @@ public class Quiz implements ActionListener {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+        frame.setLocation(200, 200);
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
