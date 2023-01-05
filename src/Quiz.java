@@ -82,26 +82,13 @@ public class Quiz implements ActionListener {
     }
 
     private void setStartImage() {
-        try {
-            int startTime = this.startTimes[this.index];
-            BufferedImage image = ImageIO.read(new File(String.format("data/img/%d.png", startTime)));
-            this.imageComponent.setImage(image);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        int startTime = this.startTimes[this.index];
+        this.imageComponent.set(startTime);
     }
 
     private void playClip() {
-        try {
-            int startTime = this.startTimes[this.index];
-            for (int time = startTime; time < startTime + 24 * this.clipLength; time++) {
-                BufferedImage image = ImageIO.read(new File(String.format("data/img/%d.png", time)));
-                this.imageComponent.setImage(image);
-                Thread.sleep(1000 / 24);
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        int startTime = this.startTimes[this.index];
+        this.imageComponent.play(startTime, startTime + 24 * this.clipLength);
     }
 
     private void updateMessage() {
