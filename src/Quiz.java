@@ -1,26 +1,18 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 public class Quiz implements ActionListener {
 
-    private int[] startTimes = {0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000};
+    private final int[] startTimes = {0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000};
     private int index = 0;
-    private int clipLength = 5;
 
-    private ImageComponent imageComponent;
+    private final ImageComponent imageComponent;
 
-    private Logger logger;
+    private final Logger logger;
 
-    private MenuInterface menuInterface;
-    private TextInterface textInterface;
-
-    private  JLabel messageLabel = new JLabel(String.format("%d / %d", this.index + 1, startTimes.length));
+    private final JLabel messageLabel = new JLabel(String.format("%d / %d", this.index + 1, startTimes.length));
 
     Quiz() {
         this.imageComponent = new ImageComponent(2);
@@ -28,8 +20,8 @@ public class Quiz implements ActionListener {
 
         this.logger = new Logger();
 
-        this.menuInterface = new MenuInterface(this.logger);
-        this.textInterface = new TextInterface(this.logger);
+        new MenuInterface(this.logger);
+        new TextInterface(this.logger);
 
         // init GUI
         JButton playButton = new JButton("play");
@@ -63,7 +55,7 @@ public class Quiz implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         String cmd = actionEvent.getActionCommand();
         if (cmd.equals("play")) {
-            logger.write(Logger.LogType.PlayPressed, this.index);
+            logger.write(Logger.LogType.QuizPlayPressed, this.index);
             this.playClip();
         }
         if (cmd.equals("previous")) {
@@ -89,7 +81,7 @@ public class Quiz implements ActionListener {
 
     private void playClip() {
         int startTime = this.startTimes[this.index];
-        this.imageComponent.play(startTime, startTime + 24 * this.clipLength);
+        this.imageComponent.play(startTime, startTime + 5 * 24);
     }
 
     private void updateMessage() {
