@@ -59,6 +59,7 @@ public class ShowResult implements ActionListener {
         if (cmd.equals("previous")) {
             if (this.index > 0) {
                 this.index--;
+                this.logger.write(Logger.LogType.ResultPreviousPressed, this.index);
                 this.updateMessage();
                 this.setStartImage();
             }
@@ -66,6 +67,7 @@ public class ShowResult implements ActionListener {
         if (cmd.equals("next")) {
             if (this.index < this.result.size() - 1) {
                 this.index++;
+                this.logger.write(Logger.LogType.ResultNextPressed, this.index);
                 this.updateMessage();
                 this.setStartImage();
             }
@@ -78,6 +80,7 @@ public class ShowResult implements ActionListener {
         this.index = 0;
         this.updateMessage();
         this.setStartImage();
+        this.logger.write(Logger.LogType.ResultShown, this.result.size());
     }
 
     private void setStartImage() {
@@ -89,6 +92,8 @@ public class ShowResult implements ActionListener {
         ArrayList<MarioEvent> data = this.result.get(this.index);
         int start = data.get(0).getTime() - 12;
         int end = data.get(data.size() - 1).getTime() + 12;
+        int[] body = {start, end};
+        this.logger.write(Logger.LogType.ResultPlayClip, body);
         this.imageComponent.play(start, end);
     }
 

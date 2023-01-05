@@ -80,10 +80,12 @@ public class MenuInterface implements ActionListener {
         if (cmd.equals("add")) {
             Object[] defaultData = {EventType.BUMP, EventParam.NONE};
             this.tableModel.addRow(defaultData);
+            this.logger.write(Logger.LogType.MenuAddPressed);
         }
         if (cmd.equals("delete")) {
             if (table.getSelectedRow() >= 0) {
                 tableModel.removeRow(table.getSelectedRow());
+                this.logger.write(Logger.LogType.MenuDeletePressed);
             }
         }
         if (cmd.equals("search")) {
@@ -91,6 +93,7 @@ public class MenuInterface implements ActionListener {
                 this.messageLabel.setText("add event and press search");
                 this.messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             } else {
+                this.logger.write(Logger.LogType.MenuSearchPressed);
                 ArrayList<ArrayList<MarioEvent>> searchResult = search.searchEvent(this.tableModel);
                 if (!searchResult.isEmpty()) {
                     this.showResult.show(searchResult);

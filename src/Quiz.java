@@ -82,6 +82,8 @@ public class Quiz implements ActionListener {
     private void playClip() {
         int startTime = this.startTimes[this.index];
         this.imageComponent.play(startTime, startTime + 5 * 24);
+        int[] body = {startTime, startTime + 5 * 24};
+        this.logger.write(Logger.LogType.QuizPlayClip, body);
     }
 
     private void updateMessage() {

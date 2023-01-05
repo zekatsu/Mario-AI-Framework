@@ -68,8 +68,10 @@ public class TextInterface implements ActionListener {
         String cmd = actionEvent.getActionCommand();
         if (cmd.equals("search")) {
             try {
+                this.logger.write(Logger.LogType.TextSearchPressed, this.textArea.getText());
                 ApiRequest request = new ApiRequest(this.textArea.getText());
                 this.lmResponse.setText(request.result);
+                this.logger.write(Logger.LogType.TextLMResponse, request.result);
                 this.parseText(request.result);
                 ArrayList<ArrayList<MarioEvent>> searchResult = this.search.searchEvent(this.eventTypes, this.eventParams);
                 if (!searchResult.isEmpty()) {
