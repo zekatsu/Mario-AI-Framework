@@ -10,7 +10,18 @@ import java.util.Calendar;
 public class Logger {
 
     public enum LogType {
-        PlayPressed,
+        QuizPlayPressed,
+        QuizPlayClip,
+        MenuAddPressed,
+        MenuDeletePressed,
+        MenuSearchPressed,
+        TextSearchPressed,
+        TextLMResponse,
+        ResultShown,
+        ResultPlayPressed,
+        ResultPlayClip,
+        ResultPreviousPressed,
+        ResultNextPressed,
     }
 
     PrintWriter writer;
@@ -39,6 +50,7 @@ public class Logger {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
         String time = dateFormat.format(Calendar.getInstance().getTime());
         String log_type = logType.toString();
+        body = body.replaceAll("\n", " ");
         writer.println(String.format("%s,%s,\"%s\"", time, log_type, body));
         writer.flush();
     }
