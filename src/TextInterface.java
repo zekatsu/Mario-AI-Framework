@@ -5,41 +5,28 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class TextInterface implements ActionListener {
 
-    private ArrayList<MarioEvent> gameEvents;
     ArrayList<EventType> eventTypes;
     ArrayList<EventParam> eventParams;
 
-    private Search search;
-    private ArrayList<ArrayList<MarioEvent>> searchResult;
-    private int searchResultIndex;
+    private final Search search;
 
-    private JTextArea textArea;
-    private JLabel messageLabel;
-    private JTextArea lmResponse;
+    private final JTextArea textArea;
+    private final JLabel messageLabel;
+    private final JTextArea lmResponse;
 
     private final ShowResult showResult;
 
-    private Logger logger;
+    private final Logger logger;
 
     TextInterface(Logger logger) {
         this.logger = logger;
-        // read gameEvents.dat
-        try {
-            FileInputStream f = new FileInputStream("data/gameEvents.dat");
-            ObjectInputStream in = new ObjectInputStream(f);
-            this.gameEvents = (ArrayList<MarioEvent>) in.readObject();
-            this.search = new Search(this.gameEvents);
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.search = new Search();
 
         // GUI initialization
         this.textArea = new JTextArea(4, 15);
@@ -84,10 +71,9 @@ public class TextInterface implements ActionListener {
                 ApiRequest request = new ApiRequest(this.textArea.getText());
                 this.lmResponse.setText(request.result);
                 this.parseText(request.result);
-                this.searchResult = this.search.searchEvent(this.eventTypes, this.eventParams);
+                ArrayList<ArrayList<MarioEvent>> searchResult = this.search.searchEvent(this.eventTypes, this.eventParams);
                 if (!searchResult.isEmpty()) {
-                    this.searchResultIndex = 0;
-                    this.showResult.show(this.searchResult);
+                    this.showResult.show(searchResult);
                 } else {
                     this.messageLabel.setText("No results found");
                 }

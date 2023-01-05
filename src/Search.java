@@ -2,13 +2,22 @@ import engine.core.MarioEvent;
 import engine.helper.EventType;
 
 import javax.swing.table.DefaultTableModel;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 public class Search {
     ArrayList<MarioEvent> gameEvents;
 
-    Search(ArrayList<MarioEvent> gameEvents) {
-        this.gameEvents = gameEvents;
+    Search() {
+        try {
+            FileInputStream f = new FileInputStream("data/gameEvents.dat");
+            ObjectInputStream in = new ObjectInputStream(f);
+            this.gameEvents = (ArrayList<MarioEvent>) in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public ArrayList<ArrayList<MarioEvent>> searchEvent(DefaultTableModel tableModel) {
