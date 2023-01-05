@@ -35,6 +35,7 @@ public class ImageComponent extends JComponent {
 
     public void set(int time) {
         try {
+            time = Math.max(time, 0);
             BufferedImage image = ImageIO.read(new File(String.format("data/img/%d.png", time)));
             this.setImage(image);
         } catch (IOException e) {
