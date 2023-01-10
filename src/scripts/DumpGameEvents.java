@@ -2,9 +2,9 @@ package scripts;
 
 import engine.core.MarioEvent;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class DumpGameEvents {
@@ -13,12 +13,12 @@ public class DumpGameEvents {
             FileInputStream f = new FileInputStream("data/gameEvents.dat");
             ObjectInputStream in = new ObjectInputStream(f);
             ArrayList<MarioEvent> gameEvents = (ArrayList<MarioEvent>) in.readObject();
+
+            String fileName = "data/gameEvents.csv";
+            Files.createFile(Path.of(fileName));
+            PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(fileName)));
             for (MarioEvent event: gameEvents) {
-                System.out.print(event.getTime());
-                System.out.print(", ");
-                System.out.print(event.getEventType());
-                System.out.print(", ");
-                System.out.println(event.getEventParam());
+                writer.println(String.format("%d, %d, %d", event.getTime(), event.getEventType(), event.getEventParam()));
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
