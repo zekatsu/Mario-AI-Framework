@@ -54,6 +54,7 @@ public class ShowResult implements ActionListener {
         String cmd = actionEvent.getActionCommand();
         if (cmd.equals("play")) {
             logger.write(Logger.LogType.ResultPlayPressed, this.index);
+            System.out.println(this.result.get(this.index).get(0).getTime());
             this.playClip();
         }
         if (cmd.equals("previous")) {
