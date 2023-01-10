@@ -75,9 +75,12 @@ public class TextInterface implements ActionListener {
                 this.parseText(request.result);
                 ArrayList<ArrayList<MarioEvent>> searchResult = this.search.searchEvent(this.eventTypes, this.eventParams);
                 if (!searchResult.isEmpty()) {
+                    this.messageLabel.setText(String.format("%d results found", searchResult.size()));
+                    this.messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                     this.showResult.show(searchResult);
                 } else {
                     this.messageLabel.setText("No results found");
+                    this.messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                 }
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();

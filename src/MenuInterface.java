@@ -96,6 +96,8 @@ public class MenuInterface implements ActionListener {
                 this.logger.write(Logger.LogType.MenuSearchPressed);
                 ArrayList<ArrayList<MarioEvent>> searchResult = search.searchEvent(this.tableModel);
                 if (!searchResult.isEmpty()) {
+                    this.messageLabel.setText(String.format("%d results found", searchResult.size()));
+                    this.messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                     this.showResult.show(searchResult);
                 } else {
                     this.messageLabel.setText("No results found");
