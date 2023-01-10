@@ -63,7 +63,7 @@ public class Search {
         EventType targetEventType = eventTypes.get(i);
         EventParam targetEventParam = eventParams.get(i);
         MarioEvent event = gameEvents.get(pos);
-        if (event.getEventType() == targetEventType.getValue() && event.getEventParam() == targetEventParam.getValue()) {
+        if (targetEventType.getValue() == event.getEventType() && (targetEventParam == EventParam.NONE || targetEventParam.getValue() == event.getEventParam())) {
             if (i == searchEventSize - 1) {
                 ret.add(event);
             } else {
